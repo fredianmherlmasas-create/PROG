@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reports - BISU-Calape Admin</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="admin-page">
+    <!-- Sidebar -->
+    <aside class="admin-sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo">
+                <img src="../images/BISU.png" alt="BISU Logo">
+                <span>BISU-Calape</span>
+            </div>
+            <button class="sidebar-toggle" id="sidebarToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+        <nav class="sidebar-nav">
+            <ul class="sidebar-menu">
+                <li class="menu-item">
+                    <a href="admin-dashboard.html" class="menu-link">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="admin-feedbacks.html" class="menu-link">
+                        <i class="fas fa-comments"></i>
+                        <span>Feedbacks</span>
+                    </a>
+                </li>
+                <li class="menu-item active">
+                    <a href="admin-reports.html" class="menu-link">
+                        <i class="fas fa-chart-bar"></i>
+                        <span>Reports</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="admin-services.html" class="menu-link">
+                        <i class="fas fa-concierge-bell"></i>
+                        <span>Services</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="admin-users.html" class="menu-link">
+                        <i class="fas fa-users"></i>
+                        <span>Users</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="admin-settings.html" class="menu-link">
+                        <i class="fas fa-cog"></i>
+                        <span>Settings</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        <div class="sidebar-footer">
+            <a href="#" class="menu-link" onclick="FeedbackSystem.logout()">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Logout</span>
+            </a>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="admin-main">
+        <!-- Header -->
+        <header class="admin-header">
+            <div class="header-left">
+                <button class="mobile-toggle" id="mobileToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <h1 class="page-title">Reports & Analytics</h1>
+            </div>
+            <div class="header-right">
+                <div class="header-user">
+                    <div class="user-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="user-info">
+                        <span class="user-name" id="userName">Admin</span>
+                        <span class="user-role">Administrator</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Content -->
+        <div class="admin-content">
+            <!-- Report Controls -->
+            <div class="report-controls">
+                <div class="control-group">
+                    <label>Date Range:</label>
+                    <select id="dateRange" class="filter-select">
+                        <option value="7">Last 7 Days</option>
+                        <option value="30" selected>Last 30 Days</option>
+                        <option value="90">Last 3 Months</option>
+                        <option value="365">Last Year</option>
+                        <option value="all">All Time</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label>Service:</label>
+                    <select id="serviceFilter" class="filter-select">
+                        <option value="">All Services</option>
+                        <option value="library">Library</option>
+                        <option value="registrar">Registrar</option>
+                        <option value="cashier">Cashier</option>
+                        <option value="it">IT Services</option>
+                        <option value="guidance">Guidance Office</option>
+                        <option value="health">Health Services</option>
+                    </select>
+                </div>
+                <div class="control-actions">
+                    <button class="btn btn-primary" onclick="generateReport()">
+                        <i class="fas fa-sync-alt"></i> Generate Report
+                    </button>
+                    <button class="btn btn-outline-primary" onclick="exportReport()">
+                        <i class="fas fa-download"></i> Export PDF
+                    </button>
+                    <button class="btn btn-outline-primary" onclick="printReport()">
+                        <i class="fas fa-print"></i> Print
+                    </button>
+                </div>
+            </div>
+
+            <!-- Summary Cards -->
+            <div class="summary-row">
+                <div class="summary-card">
+                    <div class="summary-icon blue">
+                        <i class="fas fa-comments"></i>
+                    </div>
+                    <div class="summary-info">
+                        <span class="summary-value" id="totalFeedbacks">0</span>
+                        <span class="summary-label">Total Feedbacks</span>
+                    </div>
+                </div>
+                <div class="summary-card">
+                    <div class="summary-icon green">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <div class="summary-info">
+                        <span class="summary-value" id="avgRating">0.0</span>
+                        <span class="summary-label">Average Rating</span>
+                    </div>
+                </div>
+                <div class="summary-card">
+                    <div class="summary-icon orange">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="summary-info">
+                        <span class="summary-value" id="pendingCount">0</span>
+                        <span class="summary-label">Pending</span>
+                    </div>
+                </div>
+                <div class="summary-card">
+                    <div class="summary-icon purple">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="summary-info">
+                        <span class="summary-value" id="resolvedCount">0</span>
+                        <span class="summary-label">Resolved</span>
+                    </div>
+                </div>
+                <div class="summary-card">
+                    <div class="summary-icon teal">
+                        <i class="fas fa-percentage"></i>
+                    </div>
+                    <div class="summary-info">
+                        <span class="summary-value" id="resolutionRate">0%</span>
+                        <span class="summary-label">Resolution Rate</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Grid -->
+            <div class="charts-grid">
+                <!-- Trend Chart -->
+                <div class="chart-card full-width">
+                    <div class="card-header">
+                        <h3>Feedback Trends Over Time</h3>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="trendChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Service Comparison -->
+                <div class="chart-card">
+                    <div class="card-header">
+                        <h3>Feedback by Service</h3>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="serviceChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Rating Distribution -->
+                <div class="chart-card">
+                    <div class="card-header">
+                        <h3>Rating Distribution</h3>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="ratingChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Feedback Types -->
+                <div class="chart-card">
+                    <div class="card-header">
+                        <h3>Feedback Types</h3>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="typeChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Respondent Types -->
+                <div class="chart-card">
+                    <div class="card-header">
+                        <h3>Respondent Types</h3>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="respondentChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Service Performance Table -->
+            <div class="table-card">
+                <div class="card-header">
+                    <h3>Service Performance Summary</h3>
+                </div>
+                <div class="card-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Service</th>
+                                <th>Total Feedbacks</th>
+                                <th>Avg Rating</th>
+                                <th>Compliments</th>
+                                <th>Complaints</th>
+                                <th>Resolution Rate</th>
+                                <th>Performance</th>
+                            </tr>
+                        </thead>
+                        <tbody id="performanceTable">
+                            <!-- Populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="table-card">
+                <div class="card-header">
+                    <h3>Recent Feedback Activity</h3>
+                </div>
+                <div class="card-body">
+                    <div class="activity-timeline" id="activityTimeline">
+                        <!-- Populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="../js/main.js"></script>
+    <script>
+        // Check authentication
+        if (!FeedbackSystem.requireAuth()) {
+            // Redirect handled by requireAuth
+        }
+
+        let charts = {};
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set user info
+            const user = FeedbackSystem.getCurrentUser();
+            if (user) {
+                document.getElementById('userName').textContent = user.username;
+            }
+            
+            generateReport();
+            
+            // Sidebar toggle
+            document.getElementById('sidebarToggle').addEventListener('click', function() {
+                document.getElementById('sidebar').classList.toggle('collapsed');
+            });
+            
+            document.getElementById('mobileToggle').addEventListener('click', function() {
+                document.getElementById('sidebar').classList.toggle('mobile-open');
+            });
+        });
+
+        function generateReport() {
+            const feedbacks = FeedbackSystem.getFeedbacks();
+            const dateRange = document.getElementById('dateRange').value;
+            const serviceFilter = document.getElementById('serviceFilter').value;
+            
+            // Filter data
+            let filtered = feedbacks;
+            
+            if (dateRange !== 'all') {
+                const days = parseInt(dateRange);
+                const cutoffDate = new Date();
+                cutoffDate.setDate(cutoffDate.getDate() - days);
+                filtered = filtered.filter(f => new Date(f.createdAt) >= cutoffDate);
+            }
+            
+            if (serviceFilter) {
+                filtered = filtered.filter(f => f.service === serviceFilter);
+            }
+            
+            updateSummary(filtered);
+            updateCharts(filtered);
+            updatePerformanceTable(feedbacks);
+            updateActivityTimeline(filtered.slice(0, 10));
+        }
+
+        function updateSummary(feedbacks) {
+            const total = feedbacks.length;
+            const pending = feedbacks.filter(f => f.status === 'pending').length;
+            const resolved = feedbacks.filter(f => f.status === 'resolved').length;
+            const avgRating = total > 0 ? 
+                (feedbacks.reduce((acc, f) => acc + (parseInt(f.rating) || 0), 0) / total).toFixed(1) : '0.0';
+            const resolutionRate = total > 0 ? Math.round((resolved / total) * 100) : 0;
+            
+            document.getElementById('totalFeedbacks').textContent = total;
+            document.getElementById('avgRating').textContent = avgRating;
+            document.getElementById('pendingCount').textContent = pending;
+            document.getElementById('resolvedCount').textContent = resolved;
+            document.getElementById('resolutionRate').textContent = resolutionRate + '%';
+        }
+
+        function updateCharts(feedbacks) {
+            // Destroy existing charts
+            Object.values(charts).forEach(chart => chart.destroy());
+            charts = {};
+
+            // Trend Chart
+            const trendCtx = document.getElementById('trendChart').getContext('2d');
+            const trendData = generateTrendData(feedbacks);
+            charts.trend = new Chart(trendCtx, {
+                type: 'line',
+                data: {
+                    labels: trendData.labels,
+                    datasets: [{
+                        label: 'Feedbacks',
+                        data: trendData.data,
+                        borderColor: '#003366',
+                        backgroundColor: 'rgba(0, 51, 102, 0.1)',
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: { y: { beginAtZero: true } }
+                }
+            });
+
+            // Service Chart
+            const serviceCtx = document.getElementById('serviceChart').getContext('2d');
+            const serviceCounts = getCountsByField(feedbacks, 'service');
+            charts.service = new Chart(serviceCtx, {
+                type: 'bar',
+                data: {
+                    labels: Object.keys(serviceCounts).map(formatServiceName),
+                    datasets: [{
+                        data: Object.values(serviceCounts),
+                        backgroundColor: ['#003366', '#004d99', '#0066cc', '#3385d6', '#66a3e0', '#99c2eb']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } }
+                }
+            });
+
+            // Rating Chart
+            const ratingCtx = document.getElementById('ratingChart').getContext('2d');
+            const ratingCounts = getRatingDistribution(feedbacks);
+            charts.rating = new Chart(ratingCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['1 Star', '2 Stars', '3 Stars', '4 Stars', '5 Stars'],
+                    datasets: [{
+                        data: ratingCounts,
+                        backgroundColor: ['#dc3545', '#fd7e14', '#d4a528', '#20c997', '#28a745']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    indexAxis: 'y',
+                    plugins: { legend: { display: false } }
+                }
+            });
+
+            // Type Chart
+            const typeCtx = document.getElementById('typeChart').getContext('2d');
+            const typeCounts = getCountsByField(feedbacks, 'feedbackType');
+            charts.type = new Chart(typeCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: Object.keys(typeCounts).map(t => t.charAt(0).toUpperCase() + t.slice(1)),
+                    datasets: [{
+                        data: Object.values(typeCounts),
+                        backgroundColor: ['#28a745', '#17a2b8', '#dc3545', '#d4a528']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            });
+
+            // Respondent Chart
+            const respondentCtx = document.getElementById('respondentChart').getContext('2d');
+            const respondentCounts = getCountsByField(feedbacks, 'respondentType');
+            charts.respondent = new Chart(respondentCtx, {
+                type: 'pie',
+                data: {
+                    labels: Object.keys(respondentCounts).map(t => t.charAt(0).toUpperCase() + t.slice(1)),
+                    datasets: [{
+                        data: Object.values(respondentCounts),
+                        backgroundColor: ['#003366', '#004d99', '#0066cc', '#3385d6', '#66a3e0', '#99c2eb']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            });
+        }
+
+        function generateTrendData(feedbacks) {
+            const days = 30;
+            const labels = [];
+            const data = [];
+            
+            for (let i = days - 1; i >= 0; i--) {
+                const date = new Date();
+                date.setDate(date.getDate() - i);
+                const dateStr = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                labels.push(dateStr);
+                
+                const count = feedbacks.filter(f => {
+                    const fDate = new Date(f.createdAt);
+                    return fDate.toDateString() === date.toDateString();
+                }).length;
+                data.push(count);
+            }
+            
+            return { labels, data };
+        }
+
+        function getCountsByField(feedbacks, field) {
+            const counts = {};
+            feedbacks.forEach(f => {
+                const value = f[field] || 'other';
+                counts[value] = (counts[value] || 0) + 1;
+            });
+            return counts;
+        }
+
+        function getRatingDistribution(feedbacks) {
+            const counts = [0, 0, 0, 0, 0];
+            feedbacks.forEach(f => {
+                const rating = parseInt(f.rating);
+                if (rating >= 1 && rating <= 5) {
+                    counts[rating - 1]++;
+                }
+            });
+            return counts;
+        }
+
+        function formatServiceName(service) {
+            const names = {
+                'library': 'Library',
+                'registrar': 'Registrar',
+                'cashier': 'Cashier',
+                'it': 'IT Services',
+                'guidance': 'Guidance Office',
+                'health': 'Health Services'
+            };
+            return names[service] || service;
+        }
+
+        function updatePerformanceTable(feedbacks) {
+            const services = ['library', 'registrar', 'cashier', 'it', 'student-affairs', 'health'];
+            const tableBody = document.getElementById('performanceTable');
+            
+            tableBody.innerHTML = services.map(service => {
+                const serviceFeedbacks = feedbacks.filter(f => f.service === service);
+                const total = serviceFeedbacks.length;
+                const avgRating = total > 0 ? 
+                    (serviceFeedbacks.reduce((acc, f) => acc + (parseInt(f.rating) || 0), 0) / total).toFixed(1) : '-';
+                const compliments = serviceFeedbacks.filter(f => f.feedbackType === 'compliment').length;
+                const complaints = serviceFeedbacks.filter(f => f.feedbackType === 'complaint').length;
+                const resolved = serviceFeedbacks.filter(f => f.status === 'resolved').length;
+                const resolutionRate = total > 0 ? Math.round((resolved / total) * 100) : 0;
+                const performance = getPerformanceLevel(parseFloat(avgRating) || 0);
+                
+                return `
+                    <tr>
+                        <td><strong>${formatServiceName(service)}</strong></td>
+                        <td>${total}</td>
+                        <td>${avgRating}</td>
+                        <td><span class="badge badge-success">${compliments}</span></td>
+                        <td><span class="badge badge-danger">${complaints}</span></td>
+                        <td>${resolutionRate}%</td>
+                        <td><span class="performance-badge ${performance.class}">${performance.label}</span></td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function getPerformanceLevel(rating) {
+            if (rating >= 4.5) return { label: 'Excellent', class: 'excellent' };
+            if (rating >= 4) return { label: 'Good', class: 'good' };
+            if (rating >= 3) return { label: 'Average', class: 'average' };
+            if (rating >= 2) return { label: 'Below Average', class: 'below-average' };
+            return { label: 'Needs Improvement', class: 'needs-improvement' };
+        }
+
+        function updateActivityTimeline(feedbacks) {
+            const timeline = document.getElementById('activityTimeline');
+            
+            if (feedbacks.length === 0) {
+                timeline.innerHTML = '<p class="no-activity">No recent activity</p>';
+                return;
+            }
+            
+            timeline.innerHTML = feedbacks.map(f => `
+                <div class="activity-item">
+                    <div class="activity-icon ${f.feedbackType || 'default'}">
+                        <i class="fas ${getActivityIcon(f.feedbackType)}"></i>
+                    </div>
+                    <div class="activity-content">
+                        <p><strong>${f.anonymous === 'on' ? 'Anonymous' : f.name}</strong> submitted a <span class="type-label">${f.feedbackType || 'feedback'}</span> for <strong>${formatServiceName(f.service)}</strong></p>
+                        <span class="activity-time">${FeedbackSystem.formatDate(f.createdAt)}</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function getActivityIcon(type) {
+            const icons = {
+                'compliment': 'fa-smile',
+                'suggestion': 'fa-lightbulb',
+                'complaint': 'fa-exclamation-circle',
+                'inquiry': 'fa-question-circle'
+            };
+            return icons[type] || 'fa-comment';
+        }
+
+        function exportReport() {
+            FeedbackSystem.showNotification('Report exported successfully!', 'success');
+        }
+
+        function printReport() {
+            window.print();
+        }
+    </script>
+
+    <style>
+        /* Admin Layout Styles */
+        .admin-sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 260px;
+            height: 100vh;
+            background: linear-gradient(180deg, #003366 0%, #001a33 100%);
+            z-index: 1000;
+            transition: transform 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            color: white;
+        }
+        
+        .sidebar-header {
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .sidebar-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: white;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+        
+        .sidebar-logo img {
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+        }
+        
+        .sidebar-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.25rem;
+            cursor: pointer;
+        }
+        
+        .sidebar-nav {
+            flex: 1;
+            padding: 20px 0;
+            overflow-y: auto;
+        }
+        
+        .sidebar-menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .menu-item {
+            margin-bottom: 5px;
+        }
+        
+        .menu-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 20px;
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+        }
+        
+        .menu-link:hover,
+        .menu-item.active .menu-link {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border-left-color: #d4a528;
+        }
+        
+        .menu-link i {
+            width: 20px;
+            text-align: center;
+        }
+        
+        .sidebar-footer {
+            padding: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: auto;
+        }
+        
+        .admin-main {
+            margin-left: 260px;
+            min-height: 100vh;
+            background: #f5f7fa;
+        }
+        
+        .admin-header {
+            background: white;
+            padding: 15px 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .mobile-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.25rem;
+            color: var(--gray-700);
+            cursor: pointer;
+        }
+        
+        .page-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--gray-900);
+        }
+        
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .header-user {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #003366 0%, #004080 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+        
+        .user-info {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .user-name {
+            font-weight: 600;
+            color: var(--gray-900);
+            font-size: 0.9rem;
+        }
+        
+        .user-role {
+            font-size: 0.75rem;
+            color: var(--gray-500);
+        }
+        
+        .admin-content {
+            padding: 30px;
+        }
+        
+        /* Responsive Sidebar */
+        @media (max-width: 992px) {
+            .admin-sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .admin-sidebar.active {
+                transform: translateX(0);
+            }
+            
+            .admin-main {
+                margin-left: 0;
+            }
+            
+            .sidebar-toggle,
+            .mobile-toggle {
+                display: flex;
+            }
+        }
+        
+        .report-controls {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .control-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .control-group label {
+            font-weight: 500;
+            color: var(--gray-700);
+            font-size: 0.9rem;
+        }
+        
+        .filter-select {
+            padding: 10px 15px;
+            border: 1px solid var(--gray-300);
+            border-radius: var(--radius-md);
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+        
+        .control-actions {
+            margin-left: auto;
+            display: flex;
+            gap: 10px;
+        }
+        
+        /* Summary Cards */
+        .summary-row {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+        
+        .summary-card {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .summary-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 1.25rem;
+        }
+        
+        .summary-icon.blue { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .summary-icon.green { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
+        .summary-icon.orange { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); }
+        .summary-icon.purple { background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%); }
+        .summary-icon.teal { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+        
+        .summary-info {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .summary-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--gray-900);
+        }
+        
+        .summary-label {
+            font-size: 0.8rem;
+            color: var(--gray-600);
+        }
+        
+        /* Charts Grid */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+        
+        .chart-card {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+        }
+        
+        .chart-card.full-width {
+            grid-column: span 2;
+        }
+        
+        .chart-card .card-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--gray-200);
+        }
+        
+        .chart-card .card-header h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--gray-900);
+        }
+        
+        .chart-card .card-body {
+            padding: 20px;
+            height: 300px;
+        }
+        
+        .chart-card.full-width .card-body {
+            height: 350px;
+        }
+        
+        /* Table Card */
+        .table-card {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+            margin-bottom: 25px;
+        }
+        
+        .table-card .card-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--gray-200);
+        }
+        
+        .table-card .card-header h3 {
+            font-size: 1rem;
+            font-weight: 600;
+        }
+        
+        .table-card .card-body {
+            padding: 0;
+        }
+        
+        .performance-badge {
+            padding: 5px 12px;
+            border-radius: var(--radius-full);
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .performance-badge.excellent { background: rgba(40, 167, 69, 0.1); color: #28a745; }
+        .performance-badge.good { background: rgba(23, 162, 184, 0.1); color: #17a2b8; }
+        .performance-badge.average { background: rgba(255, 193, 7, 0.1); color: #856404; }
+        .performance-badge.below-average { background: rgba(253, 126, 20, 0.1); color: #fd7e14; }
+        .performance-badge.needs-improvement { background: rgba(220, 53, 69, 0.1); color: #dc3545; }
+        
+        /* Activity Timeline */
+        .activity-timeline {
+            padding: 20px;
+        }
+        
+        .activity-item {
+            display: flex;
+            gap: 15px;
+            padding: 15px 0;
+            border-bottom: 1px solid var(--gray-100);
+        }
+        
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+        
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-full);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 1rem;
+        }
+        
+        .activity-icon.compliment { background: #28a745; }
+        .activity-icon.suggestion { background: #17a2b8; }
+        .activity-icon.complaint { background: #dc3545; }
+        .activity-icon.inquiry { background: #d4a528; color: #333; }
+        .activity-icon.default { background: var(--gray-500); }
+        
+        .activity-content p {
+            color: var(--gray-700);
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+        
+        .activity-content .type-label {
+            color: var(--primary-color);
+        }
+        
+        .activity-time {
+            font-size: 0.8rem;
+            color: var(--gray-500);
+        }
+        
+        .no-activity {
+            text-align: center;
+            color: var(--gray-500);
+            padding: 40px;
+        }
+        
+        @media (max-width: 1200px) {
+            .summary-row {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+        
+        @media (max-width: 992px) {
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .chart-card.full-width {
+                grid-column: span 1;
+            }
+            
+            .summary-row {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .report-controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .control-actions {
+                margin-left: 0;
+                justify-content: center;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .summary-row {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media print {
+            .admin-sidebar,
+            .admin-header,
+            .report-controls .control-actions {
+                display: none !important;
+            }
+            
+            .admin-main {
+                margin-left: 0 !important;
+            }
+        }
+    </style>
+</body>
+</html>

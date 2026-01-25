@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submit Feedback - BISU-Calape Feedback System</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <img src="../images/BISU.png" alt="BISU Logo" class="logo-img">
+                <div class="logo-text">
+                    <span class="logo-main">BISU-Calape</span>
+                    <span class="logo-sub">Feedback System</span>
+                </div>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item"><a href="../index.html" class="nav-link">Home</a></li>
+                <li class="nav-item"><a href="feedback.html" class="nav-link active">Submit Feedback</a></li>
+                <li class="nav-item"><a href="services.html" class="nav-link">Services</a></li>
+                <li class="nav-item"><a href="about.html" class="nav-link">About</a></li>
+                <li class="nav-item"><a href="contact.html" class="nav-link">Contact</a></li>
+            </ul>
+            <div class="nav-actions">
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+                    <i class="fas fa-moon"></i>
+                    <i class="fas fa-sun"></i>
+                </button>
+                <a href="admin-login.html" class="btn btn-outline">Admin Login</a>
+            </div>
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="container">
+            <h1 class="page-title">Submit Your Feedback</h1>
+            <div class="page-breadcrumb">
+                <a href="../index.html">Home</a>
+                <span class="separator">/</span>
+                <span>Submit Feedback</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Feedback Form Section -->
+    <section class="feedback-section">
+        <div class="container">
+            <div class="feedback-wrapper">
+                <!-- Feedback Form -->
+                <div class="feedback-form-container">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 class="card-title">
+                                <i class="fas fa-comment-dots"></i> Feedback Form
+                            </h2>
+                        </div>
+                        <div class="card-body">
+                            <form id="feedbackForm" data-validate data-type="feedback">
+                                <!-- Personal Information -->
+                                <div class="form-section">
+                                    <h3 class="form-section-title">Personal Information</h3>
+                                    <p class="form-section-desc">Your information will be kept confidential</p>
+                                    
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label class="form-label required">Full Name</label>
+                                            <input type="text" name="name" class="form-control" placeholder="Enter your full name" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label required">Email Address</label>
+                                            <input type="email" name="email" class="form-control" placeholder="Enter your email" required>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label class="form-label">Contact Number</label>
+                                            <input type="tel" name="phone" class="form-control" placeholder="Enter your phone number">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label required">Respondent Type</label>
+                                            <select name="respondentType" class="form-control" required>
+                                                <option value="">Select respondent type</option>
+                                                <option value="student">Student</option>
+                                                <option value="faculty">Faculty</option>
+                                                <option value="staff">Staff</option>
+                                                <option value="alumni">Alumni</option>
+                                                <option value="parent">Parent/Guardian</option>
+                                                <option value="visitor">Visitor</option>
+                                                <option value="other">Other</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group" id="courseYearGroup" style="display: none;">
+                                        <div class="form-row">
+                                            <div class="form-group">
+                                                <label class="form-label">Course/Department</label>
+                                                <select name="course" class="form-control">
+                                                    <option value="">Select course/department</option>
+                                                    <option value="BSIT">BS Information Technology</option>
+                                                    <option value="BSED">BS Education</option>
+                                                    <option value="BSBA">BS Business Administration</option>
+                                                    <option value="BSA">BS Agriculture</option>
+                                                    <option value="BSF">BS Fisheries</option>
+                                                    <option value="other">Other</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="form-label">Year Level</label>
+                                                <select name="yearLevel" class="form-control">
+                                                    <option value="">Select year level</option>
+                                                    <option value="1">1st Year</option>
+                                                    <option value="2">2nd Year</option>
+                                                    <option value="3">3rd Year</option>
+                                                    <option value="4">4th Year</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Service Selection -->
+                                <div class="form-section">
+                                    <h3 class="form-section-title">Service Information</h3>
+                                    <p class="form-section-desc">Select the service you want to provide feedback for</p>
+                                    
+                                    <div class="form-group">
+                                        <label class="form-label required">Select Service</label>
+                                        <select name="service" id="serviceSelect" class="form-control" required>
+                                            <option value="">Choose a service</option>
+                                            <option value="library">Library Services</option>
+                                            <option value="registrar">Registrar's Office</option>
+                                            <option value="cashier">Cashier's Office</option>
+                                            <option value="it">IT Services</option>
+                                            <option value="guidance">Guidance Office</option>
+                                            <option value="health">Health Services</option>
+                                            <option value="canteen">Canteen Services</option>
+                                            <option value="security">Security Services</option>
+                                            <option value="maintenance">Maintenance Services</option>
+                                            <option value="other">Other</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label class="form-label">Date of Visit/Transaction</label>
+                                        <input type="date" name="visitDate" class="form-control">
+                                    </div>
+                                </div>
+
+                                <!-- Rating Section -->
+                                <div class="form-section">
+                                    <h3 class="form-section-title">Service Rating</h3>
+                                    <p class="form-section-desc">Rate your experience with the service</p>
+                                    
+                                    <div class="rating-criteria">
+                                        <!-- Overall Satisfaction -->
+                                        <div class="rating-item">
+                                            <label class="rating-label">Overall Satisfaction</label>
+                                            <div class="star-rating" data-input="rating">
+                                                <i class="fas fa-star star" data-value="1"></i>
+                                                <i class="fas fa-star star" data-value="2"></i>
+                                                <i class="fas fa-star star" data-value="3"></i>
+                                                <i class="fas fa-star star" data-value="4"></i>
+                                                <i class="fas fa-star star" data-value="5"></i>
+                                            </div>
+                                            <input type="hidden" name="rating" required>
+                                            <span class="rating-text" id="ratingText">Click to rate</span>
+                                        </div>
+                                        
+                                        <!-- Staff Courtesy -->
+                                        <div class="rating-item">
+                                            <label class="rating-label">Staff Courtesy & Professionalism</label>
+                                            <div class="star-rating" data-input="courtesyRating">
+                                                <i class="fas fa-star star" data-value="1"></i>
+                                                <i class="fas fa-star star" data-value="2"></i>
+                                                <i class="fas fa-star star" data-value="3"></i>
+                                                <i class="fas fa-star star" data-value="4"></i>
+                                                <i class="fas fa-star star" data-value="5"></i>
+                                            </div>
+                                            <input type="hidden" name="courtesyRating">
+                                        </div>
+                                        
+                                        <!-- Service Speed -->
+                                        <div class="rating-item">
+                                            <label class="rating-label">Speed of Service</label>
+                                            <div class="star-rating" data-input="speedRating">
+                                                <i class="fas fa-star star" data-value="1"></i>
+                                                <i class="fas fa-star star" data-value="2"></i>
+                                                <i class="fas fa-star star" data-value="3"></i>
+                                                <i class="fas fa-star star" data-value="4"></i>
+                                                <i class="fas fa-star star" data-value="5"></i>
+                                            </div>
+                                            <input type="hidden" name="speedRating">
+                                        </div>
+                                        
+                                        <!-- Facility Quality -->
+                                        <div class="rating-item">
+                                            <label class="rating-label">Facility/Environment Quality</label>
+                                            <div class="star-rating" data-input="facilityRating">
+                                                <i class="fas fa-star star" data-value="1"></i>
+                                                <i class="fas fa-star star" data-value="2"></i>
+                                                <i class="fas fa-star star" data-value="3"></i>
+                                                <i class="fas fa-star star" data-value="4"></i>
+                                                <i class="fas fa-star star" data-value="5"></i>
+                                            </div>
+                                            <input type="hidden" name="facilityRating">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Feedback Details -->
+                                <div class="form-section">
+                                    <h3 class="form-section-title">Feedback Details</h3>
+                                    <p class="form-section-desc">Share your thoughts and suggestions</p>
+                                    
+                                    <div class="form-group">
+                                        <label class="form-label required">Feedback Type</label>
+                                        <div class="feedback-type-options">
+                                            <label class="radio-card">
+                                                <input type="radio" name="feedbackType" value="compliment" required>
+                                                <span class="radio-card-content">
+                                                    <i class="fas fa-smile"></i>
+                                                    <span>Compliment</span>
+                                                </span>
+                                            </label>
+                                            <label class="radio-card">
+                                                <input type="radio" name="feedbackType" value="suggestion">
+                                                <span class="radio-card-content">
+                                                    <i class="fas fa-lightbulb"></i>
+                                                    <span>Suggestion</span>
+                                                </span>
+                                            </label>
+                                            <label class="radio-card">
+                                                <input type="radio" name="feedbackType" value="complaint">
+                                                <span class="radio-card-content">
+                                                    <i class="fas fa-exclamation-circle"></i>
+                                                    <span>Complaint</span>
+                                                </span>
+                                            </label>
+                                            <label class="radio-card">
+                                                <input type="radio" name="feedbackType" value="inquiry">
+                                                <span class="radio-card-content">
+                                                    <i class="fas fa-question-circle"></i>
+                                                    <span>Inquiry</span>
+                                                </span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label class="form-label required">Subject</label>
+                                        <input type="text" name="subject" class="form-control" placeholder="Brief subject of your feedback" required>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label class="form-label required">Your Feedback</label>
+                                        <textarea name="message" class="form-control" rows="5" placeholder="Please provide detailed feedback about your experience..." required minlength="20"></textarea>
+                                        <small class="form-hint">Minimum 20 characters</small>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label class="form-label">Suggestions for Improvement</label>
+                                        <textarea name="suggestions" class="form-control" rows="3" placeholder="Any suggestions on how we can improve our services?"></textarea>
+                                    </div>
+                                </div>
+
+                                <!-- Consent -->
+                                <div class="form-section">
+                                    <div class="form-group">
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" name="consent" required>
+                                            <span class="checkmark"></span>
+                                            <span>I agree that my feedback may be used to improve services. I understand that my personal information will be kept confidential.</span>
+                                        </label>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" name="anonymous">
+                                            <span class="checkmark"></span>
+                                            <span>Submit as anonymous feedback (your name will not be displayed)</span>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <!-- Submit Button -->
+                                <div class="form-actions">
+                                    <button type="reset" class="btn btn-outline">
+                                        <i class="fas fa-redo"></i> Reset Form
+                                    </button>
+                                    <button type="submit" class="btn btn-gold btn-lg">
+                                        <i class="fas fa-paper-plane"></i> Submit Feedback
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sidebar -->
+                <div class="feedback-sidebar">
+                    <!-- Quick Tips -->
+                    <div class="card sidebar-card">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <i class="fas fa-lightbulb"></i> Tips for Effective Feedback
+                            </h3>
+                        </div>
+                        <div class="card-body">
+                            <ul class="tips-list">
+                                <li>
+                                    <i class="fas fa-check-circle"></i>
+                                    <span>Be specific about your experience</span>
+                                </li>
+                                <li>
+                                    <i class="fas fa-check-circle"></i>
+                                    <span>Include dates and details when possible</span>
+                                </li>
+                                <li>
+                                    <i class="fas fa-check-circle"></i>
+                                    <span>Provide constructive suggestions</span>
+                                </li>
+                                <li>
+                                    <i class="fas fa-check-circle"></i>
+                                    <span>Be respectful and professional</span>
+                                </li>
+                                <li>
+                                    <i class="fas fa-check-circle"></i>
+                                    <span>Focus on facts, not emotions</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Contact Info -->
+                    <div class="card sidebar-card">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <i class="fas fa-phone-alt"></i> Need Immediate Assistance?
+                            </h3>
+                        </div>
+                        <div class="card-body">
+                            <p>For urgent concerns, you may contact us directly:</p>
+                            <ul class="contact-quick">
+                                <li>
+                                    <i class="fas fa-phone"></i>
+                                    <span>(038) 123-4567</span>
+                                </li>
+                                <li>
+                                    <i class="fas fa-envelope"></i>
+                                    <span>feedback@bisu-calape.edu.ph</span>
+                                </li>
+                                <li>
+                                    <i class="fas fa-clock"></i>
+                                    <span>Mon-Fri: 8AM - 5PM</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Recent Stats -->
+                    <div class="card sidebar-card stats-card">
+                        <div class="card-body">
+                            <div class="mini-stat">
+                                <div class="mini-stat-icon">
+                                    <i class="fas fa-comments"></i>
+                                </div>
+                                <div class="mini-stat-info">
+                                    <span class="mini-stat-number" id="totalFeedbacks">0</span>
+                                    <span class="mini-stat-label">Total Feedbacks</span>
+                                </div>
+                            </div>
+                            <div class="mini-stat">
+                                <div class="mini-stat-icon">
+                                    <i class="fas fa-star"></i>
+                                </div>
+                                <div class="mini-stat-info">
+                                    <span class="mini-stat-number" id="avgRating">0.0</span>
+                                    <span class="mini-stat-label">Average Rating</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-logo">
+                        <img src="../images/BISU.png" alt="BISU Logo" class="footer-logo-img">
+                        <span class="footer-logo-text">BISU-Calape</span>
+                    </div>
+                    <p class="footer-description">
+                        Bohol Island State University - Calape Campus is committed to providing quality education and excellent services.
+                    </p>
+                </div>
+                <div class="footer-col">
+                    <h3 class="footer-title">Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="../index.html">Home</a></li>
+                        <li><a href="feedback.html">Submit Feedback</a></li>
+                        <li><a href="services.html">Services</a></li>
+                        <li><a href="about.html">About Us</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h3 class="footer-title">Contact Info</h3>
+                    <ul class="footer-contact">
+                        <li>
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Calape, Bohol, Philippines</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-envelope"></i>
+                            <span>feedback@bisu-calape.edu.ph</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 BISU-Calape Customer Feedback Satisfaction System. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Back to Top -->
+    <button class="back-to-top" id="backToTop">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <script src="../js/main.js"></script>
+    <script>
+        // Page-specific JavaScript
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check for service parameter in URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const service = urlParams.get('service');
+            if (service) {
+                document.getElementById('serviceSelect').value = service;
+            }
+            
+            // Toggle course/year fields based on respondent type
+            const respondentType = document.querySelector('[name="respondentType"]');
+            const courseYearGroup = document.getElementById('courseYearGroup');
+            
+            respondentType.addEventListener('change', function() {
+                if (this.value === 'student') {
+                    courseYearGroup.style.display = 'block';
+                } else {
+                    courseYearGroup.style.display = 'none';
+                }
+            });
+            
+            // Rating text update
+            const mainRating = document.querySelector('[data-input="rating"]');
+            const ratingText = document.getElementById('ratingText');
+            const ratingTexts = {
+                1: 'Very Poor',
+                2: 'Poor',
+                3: 'Average',
+                4: 'Good',
+                5: 'Excellent'
+            };
+            
+            mainRating.addEventListener('ratingChanged', function(e) {
+                ratingText.textContent = ratingTexts[e.detail.value] || 'Click to rate';
+            });
+            
+            // Load stats
+            const feedbacks = JSON.parse(localStorage.getItem('feedbacks') || '[]');
+            document.getElementById('totalFeedbacks').textContent = feedbacks.length;
+            
+            if (feedbacks.length > 0) {
+                const avgRating = feedbacks.reduce((acc, f) => acc + (parseInt(f.rating) || 0), 0) / feedbacks.length;
+                document.getElementById('avgRating').textContent = avgRating.toFixed(1);
+            }
+        });
+    </script>
+
+    <style>
+        /* Page-specific styles */
+        .feedback-section {
+            padding: 60px 0;
+            background: var(--gray-100);
+        }
+        
+        .feedback-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 30px;
+            align-items: start;
+        }
+        
+        .form-section {
+            margin-bottom: 30px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid var(--gray-200);
+        }
+        
+        .form-section:last-of-type {
+            border-bottom: none;
+            margin-bottom: 20px;
+        }
+        
+        .form-section-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--gray-900);
+            margin-bottom: 5px;
+        }
+        
+        .form-section-desc {
+            color: var(--gray-600);
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .form-hint {
+            color: var(--gray-500);
+            font-size: 0.8rem;
+            margin-top: 5px;
+        }
+        
+        /* Rating Section */
+        .rating-criteria {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .rating-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            background: var(--gray-100);
+            border-radius: var(--radius-md);
+        }
+        
+        .rating-label {
+            flex: 1;
+            font-weight: 500;
+            color: var(--gray-700);
+        }
+        
+        .rating-text {
+            font-size: 0.875rem;
+            color: var(--primary-color);
+            font-weight: 500;
+            min-width: 80px;
+            text-align: right;
+        }
+        
+        /* Feedback Type Options */
+        .feedback-type-options {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+        }
+        
+        .radio-card {
+            cursor: pointer;
+        }
+        
+        .radio-card input {
+            display: none;
+        }
+        
+        .radio-card-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            padding: 20px 15px;
+            border: 2px solid var(--gray-300);
+            border-radius: var(--radius-md);
+            transition: all var(--transition-base);
+        }
+        
+        .radio-card-content i {
+            font-size: 1.5rem;
+            color: var(--gray-500);
+        }
+        
+        .radio-card-content span {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--gray-700);
+        }
+        
+        .radio-card input:checked + .radio-card-content {
+            border-color: var(--primary-color);
+            background: rgba(0, 51, 102, 0.05);
+        }
+        
+        .radio-card input:checked + .radio-card-content i {
+            color: var(--primary-color);
+        }
+        
+        .radio-card:hover .radio-card-content {
+            border-color: var(--primary-light);
+        }
+        
+        /* Checkbox Styles */
+        .checkbox-label {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            color: var(--gray-700);
+            line-height: 1.5;
+        }
+        
+        .checkbox-label input {
+            margin-top: 3px;
+            width: 18px;
+            height: 18px;
+            accent-color: var(--primary-color);
+        }
+        
+        /* Form Actions */
+        .form-actions {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+            padding-top: 20px;
+        }
+        
+        /* Sidebar */
+        .sidebar-card {
+            margin-bottom: 20px;
+        }
+        
+        .sidebar-card .card-title {
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .tips-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .tips-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            font-size: 0.9rem;
+            color: var(--gray-700);
+        }
+        
+        .tips-list li i {
+            color: var(--success-color);
+            margin-top: 3px;
+        }
+        
+        .contact-quick {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 15px;
+        }
+        
+        .contact-quick li {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.9rem;
+        }
+        
+        .contact-quick li i {
+            color: var(--primary-color);
+            width: 20px;
+        }
+        
+        /* Stats Card */
+        .stats-card .card-body {
+            padding: 20px;
+        }
+        
+        .mini-stat {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px 0;
+        }
+        
+        .mini-stat:not(:last-child) {
+            border-bottom: 1px solid var(--gray-200);
+        }
+        
+        .mini-stat-icon {
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--primary-gradient);
+            border-radius: var(--radius-md);
+            color: var(--white);
+            font-size: 1.25rem;
+        }
+        
+        .mini-stat-info {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .mini-stat-number {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--gray-900);
+        }
+        
+        .mini-stat-label {
+            font-size: 0.8rem;
+            color: var(--gray-600);
+        }
+        
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .feedback-wrapper {
+                grid-template-columns: 1fr;
+            }
+            
+            .feedback-sidebar {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 20px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .feedback-type-options {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .feedback-sidebar {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-actions {
+                flex-direction: column;
+            }
+            
+            .form-actions .btn {
+                width: 100%;
+            }
+            
+            .rating-item {
+                flex-wrap: wrap;
+            }
+            
+            .rating-label {
+                flex: 100%;
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+</body>
+</html>
