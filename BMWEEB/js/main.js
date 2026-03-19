@@ -23,6 +23,9 @@ document.addEventListener('DOMContentLoaded', function() {
     initFormValidation();
     initModals();
     initNotifications();
+    initAnonymousToggle();
+    initCitizensCharterSurvey();
+    initSatisfactionRatingTable();
 });
 
 
@@ -456,6 +459,17 @@ function handleFormSubmit(form) {
                 const stars = rating.querySelectorAll('.star');
                 stars.forEach(star => star.classList.remove('active', 'hover'));
             });
+            
+            // Reset satisfaction rating table
+            const satisfactionCells = form.querySelectorAll('.satisfaction-table .rating-cell');
+            satisfactionCells.forEach(cell => {
+                cell.classList.remove('active');
+            });
+            
+            // Reset other form states
+            initAnonymousToggle();
+            initCitizensCharterSurvey();
+            initSatisfactionRatingTable();
         } else if (formType === 'contact') {
             saveContactMessage(data);
             showNotification('Your message has been sent. We will get back to you soon!', 'success');
@@ -779,6 +793,165 @@ function throttle(func, limit) {
             setTimeout(() => inThrottle = false, limit);
         }
     };
+}
+
+// Handle Anonymous Feedback Toggle
+function initAnonymousToggle() {
+    const anonymousCheckbox = document.getElementById('anonymousCheckbox');
+    const personalInfoSection = document.getElementById('personalInfoSection');
+    
+    if (anonymousCheckbox && personalInfoSection) {
+        anonymousCheckbox.addEventListener('change', () => {
+            if (anonymousCheckbox.checked) {
+                // Hide personal info when anonymous is checked
+                personalInfoSection.style.display = 'none';
+                // Remove required attribute from personal info fields
+                const nameField = personalInfoSection.querySelector('input[name="name"]');
+                const emailField = personalInfoSection.querySelector('input[name="email"]');
+                const phoneField = personalInfoSection.querySelector('input[name="phone"]');
+                if (nameField) nameField.removeAttribute('required');
+                if (emailField) emailField.removeAttribute('required');
+                if (phoneField) phoneField.removeAttribute('required');
+            } else {
+                // Show personal info when anonymous is unchecked
+                personalInfoSection.style.display = 'block';
+                // Add required attribute back to personal info fields
+                const nameField = personalInfoSection.querySelector('input[name="name"]');
+                const emailField = personalInfoSection.querySelector('input[name="email"]');
+                const phoneField = personalInfoSection.querySelector('input[name="phone"]');
+                if (nameField) nameField.setAttribute('required', 'required');
+                if (emailField) emailField.setAttribute('required', 'required');
+                if (phoneField) phoneField.setAttribute('required', 'required');
+            }
+        });
+    }
+}
+
+// Handle Citizen's Charter Survey Logic
+function initCitizensCharterSurvey() {
+    const cc1Radios = document.querySelectorAll('input[name="cc1_awareness"]');
+    const cc2Group = document.getElementById('cc2Group');
+    const cc3Group = document.getElementById('cc3Group');
+    const cc2AnswerDiv = document.querySelector('.cc2-answer');
+    const cc2NaDiv = document.querySelector('.cc2-na');
+    const cc3AnswerDiv = document.querySelector('.cc3-answer');
+    const cc3NaDiv = document.querySelector('.cc3-na');
+    const cc2Radios = document.querySelectorAll('input[name="cc2_visibility"]');
+    const cc3Radios = document.querySelectorAll('input[name="cc3_helpfulness"]');
+    
+    if (!cc1Radios.length || !cc2Group || !cc3Group) return;
+    
+    function updateCCState() {
+        const cc1Selected = document.querySelector('input[name="cc1_awareness"]:checked');
+        
+        if (cc1Selected && cc1Selected.value === '4') {
+            // CC1 is "I do not know what a CC is..." - disable CC2 and CC3
+            cc2Group.style.display = 'block';
+            cc3Group.style.display = 'block';
+            
+            // Show only N/A options and hide regular options
+            cc2AnswerDiv.style.display = 'none';
+            cc2NaDiv.style.display = 'block';
+            cc3AnswerDiv.style.display = 'none';
+            cc3NaDiv.style.display = 'block';
+            
+            // Disable regular options for CC2 and CC3
+            cc2Radios.forEach(radio => {
+                if (radio.value !== '5') radio.disabled = true;
+            });
+            cc3Radios.forEach(radio => {
+                if (radio.value !== '4') radio.disabled = true;
+            });
+            
+            // Auto-select N/A for CC2 and CC3
+            const cc2NaRadio = document.querySelector('input[name="cc2_visibility"][value="5"]');
+            const cc3NaRadio = document.querySelector('input[name="cc3_helpfulness"][value="4"]');
+            if (cc2NaRadio) cc2NaRadio.checked = true;
+            if (cc3NaRadio) cc3NaRadio.checked = true;
+        } else if (cc1Selected && ['1', '2', '3'].includes(cc1Selected.value)) {
+            // CC1 is options 1-3 - enable CC2 and CC3
+            cc2Group.style.display = 'block';
+            cc3Group.style.display = 'block';
+            
+            // Show regular options and hide N/A options
+            cc2AnswerDiv.style.display = 'block';
+            cc2NaDiv.style.display = 'none';
+            cc3AnswerDiv.style.display = 'block';
+            cc3NaDiv.style.display = 'none';
+            
+            // Enable all regular options for CC2 and CC3
+            cc2Radios.forEach(radio => {
+                if (radio.value !== '5') radio.disabled = false;
+            });
+            cc3Radios.forEach(radio => {
+                if (radio.value !== '4') radio.disabled = false;
+            });
+            
+            // Uncheck N/A options
+            const cc2NaRadio = document.querySelector('input[name="cc2_visibility"][value="5"]');
+            const cc3NaRadio = document.querySelector('input[name="cc3_helpfulness"][value="4"]');
+            if (cc2NaRadio) cc2NaRadio.checked = false;
+            if (cc3NaRadio) cc3NaRadio.checked = false;
+        } else {
+            // No selection yet - hide CC2 and CC3
+            cc2Group.style.display = 'none';
+            cc3Group.style.display = 'none';
+        }
+    }
+    
+    // Add event listeners to CC1 radios
+    cc1Radios.forEach(radio => {
+        radio.addEventListener('change', updateCCState);
+    });
+    
+    // Initial state
+    updateCCState();
+}
+
+// Handle Satisfaction Rating Table
+function initSatisfactionRatingTable() {
+    const satisfactionRadios = document.querySelectorAll('.satisfaction-table input[type="radio"]');
+    
+    if (!satisfactionRadios.length) return;
+    
+    // Add visual feedback when radio is selected
+    satisfactionRadios.forEach(radio => {
+        radio.addEventListener('change', function() {
+            const row = this.closest('.satisfaction-row');
+            if (row) {
+                // Remove active state from all cells in this row
+                row.querySelectorAll('.rating-cell').forEach(cell => {
+                    cell.classList.remove('active');
+                });
+                // Add active state to the selected cell
+                this.closest('.rating-cell').classList.add('active');
+            }
+        });
+    });
+}
+
+// Get Satisfaction Ratings as JSON Object
+function getSatisfactionRatings() {
+    const ratings = {};
+    const dimensions = [
+        'sat_responsiveness',
+        'sat_reliability',
+        'sat_access',
+        'sat_communication',
+        'sat_costs',
+        'sat_integrity',
+        'sat_assurance',
+        'sat_outcome'
+    ];
+    
+    dimensions.forEach(dimension => {
+        const selectedRadio = document.querySelector(`input[name="${dimension}"]:checked`);
+        if (selectedRadio) {
+            ratings[dimension] = parseInt(selectedRadio.value);
+        }
+    });
+    
+    return ratings;
 }
 
 // Export Functions for Global Use
