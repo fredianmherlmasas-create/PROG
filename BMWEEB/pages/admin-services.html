@@ -1,10 +1,11 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manage Services - BISU-Calape Admin</title>
     <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/admin-services.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
@@ -24,37 +25,37 @@
             <ul class="sidebar-menu">
                 <li class="menu-item">
                     <a href="admin-dashboard.html" class="menu-link">
-                        <i class="fas fa-tachometer-alt"></i>
+                        <i class="fa-solid fa-chart-line"></i>
                         <span>Dashboard</span>
                     </a>
                 </li>
                 <li class="menu-item">
                     <a href="admin-feedbacks.html" class="menu-link">
-                        <i class="fas fa-comments"></i>
+                        <i class="fa-solid fa-comment"></i>
                         <span>Feedbacks</span>
                     </a>
                 </li>
                 <li class="menu-item">
                     <a href="admin-reports.html" class="menu-link">
-                        <i class="fas fa-chart-bar"></i>
+                        <i class="fa-solid fa-chart-pie"></i>
                         <span>Reports</span>
                     </a>
                 </li>
                 <li class="menu-item active">
                     <a href="admin-services.html" class="menu-link">
-                        <i class="fas fa-concierge-bell"></i>
+                        <i class="fa-solid fa-bell-concierge"></i>
                         <span>Services</span>
                     </a>
                 </li>
                 <li class="menu-item">
                     <a href="admin-users.html" class="menu-link">
-                        <i class="fas fa-users"></i>
+                        <i class="fa-solid fa-users"></i>
                         <span>Users</span>
                     </a>
                 </li>
                 <li class="menu-item">
                     <a href="admin-settings.html" class="menu-link">
-                        <i class="fas fa-cog"></i>
+                        <i class="fa-solid fa-gear"></i>
                         <span>Settings</span>
                     </a>
                 </li>
@@ -62,7 +63,7 @@
         </nav>
         <div class="sidebar-footer">
             <a href="#" class="menu-link" onclick="FeedbackSystem.logout()">
-                <i class="fas fa-sign-out-alt"></i>
+                <i class="fa-solid fa-right-from-bracket"></i>
                 <span>Logout</span>
             </a>
         </div>
@@ -96,42 +97,66 @@
 
         <!-- Content -->
         <div class="admin-content">
+            <!-- Welcome Section -->
+            <div class="welcome-section">
+                <div class="welcome-text">
+                    <h2>Services Management</h2>
+                    <p>Manage and monitor all available services and their feedback.</p>
+                </div>
+            </div>
+
             <!-- Stats Cards -->
-            <div class="services-stats">
-                <div class="stat-card">
-                    <div class="stat-icon blue">
+            <div class="stats-row">
+                <div class="stat-card-admin">
+                    <div class="stat-card-icon" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
                         <i class="fas fa-concierge-bell"></i>
                     </div>
-                    <div class="stat-info">
-                        <span class="stat-value" id="totalServices">0</span>
-                        <span class="stat-label">Total Services</span>
+                    <div class="stat-card-info">
+                        <h3 id="totalServices">0</h3>
+                        <p>Total Services</p>
+                    </div>
+                    <div class="stat-card-trend up">
+                        <i class="fas fa-arrow-up"></i>
+                        <span>0%</span>
                     </div>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-icon green">
+                <div class="stat-card-admin">
+                    <div class="stat-card-icon" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
                         <i class="fas fa-check-circle"></i>
                     </div>
-                    <div class="stat-info">
-                        <span class="stat-value" id="activeServices">0</span>
-                        <span class="stat-label">Active Services</span>
+                    <div class="stat-card-info">
+                        <h3 id="activeServices">0</h3>
+                        <p>Active Services</p>
+                    </div>
+                    <div class="stat-card-trend up">
+                        <i class="fas fa-arrow-up"></i>
+                        <span>0%</span>
                     </div>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-icon orange">
+                <div class="stat-card-admin">
+                    <div class="stat-card-icon" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
                         <i class="fas fa-pause-circle"></i>
                     </div>
-                    <div class="stat-info">
-                        <span class="stat-value" id="inactiveServices">0</span>
-                        <span class="stat-label">Inactive Services</span>
+                    <div class="stat-card-info">
+                        <h3 id="inactiveServices">0</h3>
+                        <p>Inactive Services</p>
+                    </div>
+                    <div class="stat-card-trend down">
+                        <i class="fas fa-arrow-down"></i>
+                        <span>0%</span>
                     </div>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-icon purple">
+                <div class="stat-card-admin">
+                    <div class="stat-card-icon" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
                         <i class="fas fa-comments"></i>
                     </div>
-                    <div class="stat-info">
-                        <span class="stat-value" id="totalFeedbacks">0</span>
-                        <span class="stat-label">Total Feedbacks</span>
+                    <div class="stat-card-info">
+                        <h3 id="totalFeedbacks">0</h3>
+                        <p>Total Feedbacks</p>
+                    </div>
+                    <div class="stat-card-trend up">
+                        <i class="fas fa-arrow-up"></i>
+                        <span>0%</span>
                     </div>
                 </div>
             </div>
@@ -184,6 +209,11 @@
                     <div class="form-group">
                         <label for="serviceContact">Contact</label>
                         <input type="text" id="serviceContact" class="form-control" placeholder="e.g., (038) 123-4567">
+                    </div>
+                    <div class="form-group">
+                        <label for="serviceEmail">Service Email</label>
+                        <input type="email" id="serviceEmail" class="form-control" placeholder="e.g., library@bisu.edu.ph">
+                        <small class="form-help">Email address for sending reports.</small>
                     </div>
                     <div class="form-group">
                         <label class="checkbox-label">
@@ -241,6 +271,7 @@
                 location: 'Main Building, Ground Floor',
                 hours: 'Mon-Fri 8:00 AM - 5:00 PM, Sat 8:00 AM - 12:00 PM',
                 contact: '(038) 501-0001',
+                email: 'library@bisu.edu.ph',
                 active: true
             },
             {
@@ -252,6 +283,7 @@
                 location: 'Admin Building, 1st Floor',
                 hours: 'Mon-Fri 8:00 AM - 5:00 PM',
                 contact: '(038) 501-0002',
+                email: 'registrar@bisu.edu.ph',
                 active: true
             },
             {
@@ -263,6 +295,7 @@
                 location: 'Admin Building, 1st Floor',
                 hours: 'Mon-Fri 8:00 AM - 5:00 PM',
                 contact: '(038) 501-0003',
+                email: 'cashier@bisu.edu.ph',
                 active: true
             },
             {
@@ -274,6 +307,7 @@
                 location: 'ICT Building, 2nd Floor',
                 hours: 'Mon-Fri 8:00 AM - 5:00 PM',
                 contact: '(038) 501-0004',
+                email: 'it@bisu.edu.ph',
                 active: true
             },
             {
@@ -285,6 +319,7 @@
                 location: 'Admin Building, 2nd Floor',
                 hours: 'Mon-Fri 8:00 AM - 5:00 PM',
                 contact: '(038) 501-0005',
+                email: 'guidance@bisu.edu.ph',
                 active: true
             },
             {
@@ -296,17 +331,7 @@
                 location: 'Clinic Building',
                 hours: 'Mon-Fri 8:00 AM - 5:00 PM',
                 contact: '(038) 501-0006',
-                active: true
-            },
-            {
-                id: 'guidance',
-                name: 'Guidance & Counseling',
-                key: 'guidance',
-                icon: 'fas fa-comments',
-                description: 'Counseling services, career guidance, and psychological support.',
-                location: 'Admin Building, 3rd Floor',
-                hours: 'Mon-Fri 8:00 AM - 5:00 PM',
-                contact: '(038) 501-0007',
+                email: 'health@bisu.edu.ph',
                 active: true
             },
             {
@@ -318,6 +343,7 @@
                 location: 'Main Gate',
                 hours: '24/7',
                 contact: '(038) 501-0008',
+                email: 'security@bisu.edu.ph',
                 active: true
             }
         ];
@@ -391,6 +417,7 @@
                             ${service.location ? `<div class="detail"><i class="fas fa-map-marker-alt"></i> ${service.location}</div>` : ''}
                             ${service.hours ? `<div class="detail"><i class="fas fa-clock"></i> ${service.hours}</div>` : ''}
                             ${service.contact ? `<div class="detail"><i class="fas fa-phone"></i> ${service.contact}</div>` : ''}
+                            ${service.email ? `<div class="detail"><i class="fas fa-envelope"></i> ${service.email}</div>` : ''}
                         </div>
                     </div>
                     <div class="service-footer">
@@ -451,6 +478,7 @@
             document.getElementById('serviceLocation').value = service.location || '';
             document.getElementById('serviceHours').value = service.hours || '';
             document.getElementById('serviceContact').value = service.contact || '';
+            document.getElementById('serviceEmail').value = service.email || '';
             document.getElementById('serviceActive').checked = service.active;
             
             document.getElementById('serviceModal').classList.add('active');
@@ -469,6 +497,7 @@
             const location = document.getElementById('serviceLocation').value.trim();
             const hours = document.getElementById('serviceHours').value.trim();
             const contact = document.getElementById('serviceContact').value.trim();
+            const email = document.getElementById('serviceEmail').value.trim();
             const active = document.getElementById('serviceActive').checked;
             
             if (!name || !key) {
@@ -487,7 +516,7 @@
                 // Update existing
                 const index = services.findIndex(s => s.id === id);
                 if (index !== -1) {
-                    services[index] = { ...services[index], name, key, icon, description, location, hours, contact, active };
+                    services[index] = { ...services[index], name, key, icon, description, location, hours, contact, email, active };
                 }
                 FeedbackSystem.showNotification('Service updated successfully', 'success');
             } else {
@@ -544,547 +573,5 @@
             }
             closeDeleteModal();
         }
-    </script>
-
-    <style>
-        /* Admin Layout Styles */
-        .admin-sidebar {
-            position: fixed;
-            left: 0;
-            top: 0;
-            width: 260px;
-            height: 100vh;
-            background: linear-gradient(180deg, #003366 0%, #001a33 100%);
-            z-index: 1000;
-            transition: transform 0.3s ease;
-            display: flex;
-            flex-direction: column;
-            color: white;
-        }
-        
-        .sidebar-header {
-            padding: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        
-        .sidebar-logo {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            color: white;
-            font-weight: 600;
-            font-size: 1.1rem;
-        }
-        
-        .sidebar-logo img {
-            width: 40px;
-            height: 40px;
-            object-fit: contain;
-        }
-        
-        .sidebar-toggle {
-            display: none;
-            background: none;
-            border: none;
-            color: white;
-            font-size: 1.25rem;
-            cursor: pointer;
-        }
-        
-        .sidebar-nav {
-            flex: 1;
-            padding: 20px 0;
-            overflow-y: auto;
-        }
-        
-        .sidebar-menu {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-        
-        .menu-item {
-            margin-bottom: 5px;
-        }
-        
-        .menu-link {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px 20px;
-            color: rgba(255, 255, 255, 0.7);
-            text-decoration: none;
-            transition: all 0.3s ease;
-            border-left: 3px solid transparent;
-        }
-        
-        .menu-link:hover,
-        .menu-item.active .menu-link {
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-            border-left-color: #d4a528;
-        }
-        
-        .menu-link i {
-            width: 20px;
-            text-align: center;
-        }
-        
-        .sidebar-footer {
-            padding: 20px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            margin-top: auto;
-        }
-        
-        .admin-main {
-            margin-left: 260px;
-            min-height: 100vh;
-            background: #f5f7fa;
-        }
-        
-        .admin-header {
-            background: white;
-            padding: 15px 30px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-        
-        .header-left {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-        
-        .mobile-toggle {
-            display: none;
-            background: none;
-            border: none;
-            font-size: 1.25rem;
-            color: var(--gray-700);
-            cursor: pointer;
-        }
-        
-        .page-title {
-            font-size: 1.5rem;
-            font-weight: 600;
-            color: var(--gray-900);
-        }
-        
-        .header-right {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-        
-        .header-user {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .user-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #003366 0%, #004080 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-        }
-        
-        .user-info {
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .user-name {
-            font-weight: 600;
-            color: var(--gray-900);
-            font-size: 0.9rem;
-        }
-        
-        .user-role {
-            font-size: 0.75rem;
-            color: var(--gray-500);
-        }
-        
-        .admin-content {
-            padding: 30px;
-        }
-        
-        /* Responsive Sidebar */
-        @media (max-width: 992px) {
-            .admin-sidebar {
-                transform: translateX(-100%);
-            }
-            
-            .admin-sidebar.active {
-                transform: translateX(0);
-            }
-            
-            .admin-main {
-                margin-left: 0;
-            }
-            
-            .sidebar-toggle,
-            .mobile-toggle {
-                display: flex;
-            }
-        }
-        
-        .services-stats {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-        
-        .stat-card {
-            background: var(--white);
-            border-radius: var(--radius-lg);
-            padding: 20px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            box-shadow: var(--shadow-sm);
-        }
-        
-        .stat-icon {
-            width: 50px;
-            height: 50px;
-            border-radius: var(--radius-md);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.25rem;
-            color: var(--white);
-        }
-        
-        .stat-icon.blue { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
-        .stat-icon.green { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
-        .stat-icon.orange { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); }
-        .stat-icon.purple { background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%); }
-        
-        .stat-info {
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .stat-value {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--gray-900);
-        }
-        
-        .stat-label {
-            font-size: 0.85rem;
-            color: var(--gray-600);
-        }
-        
-        /* Services Grid */
-        .services-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-            gap: 20px;
-        }
-        
-        .service-card {
-            background: var(--white);
-            border-radius: var(--radius-lg);
-            box-shadow: var(--shadow-sm);
-            overflow: hidden;
-            transition: var(--transition-normal);
-        }
-        
-        .service-card:hover {
-            box-shadow: var(--shadow-md);
-        }
-        
-        .service-card.inactive {
-            opacity: 0.7;
-        }
-        
-        .service-header {
-            padding: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: linear-gradient(135deg, var(--primary-color) 0%, #004d99 100%);
-        }
-        
-        .service-icon {
-            width: 50px;
-            height: 50px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: var(--radius-md);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            color: var(--white);
-        }
-        
-        .service-status {
-            padding: 5px 12px;
-            border-radius: var(--radius-full);
-            font-size: 0.75rem;
-            font-weight: 600;
-            text-transform: uppercase;
-        }
-        
-        .service-status.active {
-            background: rgba(255, 255, 255, 0.2);
-            color: var(--white);
-        }
-        
-        .service-status.inactive {
-            background: rgba(0, 0, 0, 0.2);
-            color: rgba(255, 255, 255, 0.8);
-        }
-        
-        .service-body {
-            padding: 20px;
-        }
-        
-        .service-body h3 {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: var(--gray-900);
-            margin-bottom: 10px;
-        }
-        
-        .service-body p {
-            color: var(--gray-600);
-            font-size: 0.9rem;
-            margin-bottom: 15px;
-        }
-        
-        .service-details {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-        
-        .service-details .detail {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 0.85rem;
-            color: var(--gray-600);
-        }
-        
-        .service-details .detail i {
-            width: 16px;
-            color: var(--primary-color);
-        }
-        
-        .service-footer {
-            padding: 15px 20px;
-            border-top: 1px solid var(--gray-200);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .service-stats {
-            font-size: 0.85rem;
-            color: var(--gray-600);
-        }
-        
-        .service-stats i {
-            color: var(--primary-color);
-            margin-right: 5px;
-        }
-        
-        .service-actions {
-            display: flex;
-            gap: 5px;
-        }
-        
-        .btn-icon {
-            width: 35px;
-            height: 35px;
-            border: none;
-            background: var(--gray-100);
-            border-radius: var(--radius-md);
-            cursor: pointer;
-            transition: var(--transition-fast);
-            color: var(--gray-600);
-        }
-        
-        .btn-icon:hover {
-            background: var(--gray-200);
-            color: var(--gray-800);
-        }
-        
-        .btn-icon.danger:hover {
-            background: rgba(220, 53, 69, 0.1);
-            color: #dc3545;
-        }
-        
-        /* Modal Styles */
-        .modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-            opacity: 0;
-            visibility: hidden;
-            transition: var(--transition-normal);
-        }
-        
-        .modal.active {
-            opacity: 1;
-            visibility: visible;
-        }
-        
-        .modal-content {
-            background: var(--white);
-            border-radius: var(--radius-lg);
-            width: 100%;
-            max-width: 500px;
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-        
-        .modal-content.modal-sm {
-            max-width: 400px;
-        }
-        
-        .modal-header {
-            padding: 20px;
-            border-bottom: 1px solid var(--gray-200);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .modal-header h2 {
-            font-size: 1.25rem;
-            font-weight: 600;
-        }
-        
-        .modal-close {
-            background: none;
-            border: none;
-            font-size: 1.25rem;
-            color: var(--gray-500);
-            cursor: pointer;
-        }
-        
-        .modal-body {
-            padding: 20px;
-        }
-        
-        .modal-footer {
-            padding: 15px 20px;
-            border-top: 1px solid var(--gray-200);
-            display: flex;
-            justify-content: flex-end;
-            gap: 10px;
-        }
-        
-        .form-group {
-            margin-bottom: 15px;
-        }
-        
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: 500;
-            font-size: 0.9rem;
-            color: var(--gray-700);
-        }
-        
-        .form-help {
-            display: block;
-            margin-top: 5px;
-            font-size: 0.8rem;
-            color: var(--gray-500);
-        }
-        
-        .checkbox-label {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            cursor: pointer;
-        }
-        
-        .checkbox-label input {
-            width: 18px;
-            height: 18px;
-        }
-        
-        .delete-warning {
-            text-align: center;
-            padding: 20px;
-        }
-        
-        .delete-warning i {
-            font-size: 3rem;
-            color: #dc3545;
-            margin-bottom: 15px;
-        }
-        
-        .delete-warning p {
-            color: var(--gray-700);
-            margin-bottom: 10px;
-        }
-        
-        .warning-text {
-            color: var(--gray-500);
-            font-size: 0.9rem;
-        }
-        
-        .no-services {
-            grid-column: 1 / -1;
-            text-align: center;
-            padding: 60px 20px;
-            background: var(--white);
-            border-radius: var(--radius-lg);
-        }
-        
-        .no-services i {
-            font-size: 4rem;
-            color: var(--gray-300);
-            margin-bottom: 20px;
-        }
-        
-        .no-services p {
-            color: var(--gray-600);
-            margin-bottom: 20px;
-        }
-        
-        @media (max-width: 992px) {
-            .services-stats {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-        
-        @media (max-width: 768px) {
-            .services-stats {
-                grid-template-columns: 1fr;
-            }
-            
-            .services-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
-</body>
+    </script></body>
 </html>

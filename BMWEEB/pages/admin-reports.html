@@ -1,10 +1,11 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reports - BISU-Calape Admin</title>
     <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/admin-reports.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -25,37 +26,37 @@
             <ul class="sidebar-menu">
                 <li class="menu-item">
                     <a href="admin-dashboard.html" class="menu-link">
-                        <i class="fas fa-tachometer-alt"></i>
+                        <i class="fa-solid fa-chart-line"></i>
                         <span>Dashboard</span>
                     </a>
                 </li>
                 <li class="menu-item">
                     <a href="admin-feedbacks.html" class="menu-link">
-                        <i class="fas fa-comments"></i>
+                        <i class="fa-solid fa-comment"></i>
                         <span>Feedbacks</span>
                     </a>
                 </li>
                 <li class="menu-item active">
                     <a href="admin-reports.html" class="menu-link">
-                        <i class="fas fa-chart-bar"></i>
+                        <i class="fa-solid fa-chart-pie"></i>
                         <span>Reports</span>
                     </a>
                 </li>
                 <li class="menu-item">
                     <a href="admin-services.html" class="menu-link">
-                        <i class="fas fa-concierge-bell"></i>
+                        <i class="fa-solid fa-bell-concierge"></i>
                         <span>Services</span>
                     </a>
                 </li>
                 <li class="menu-item">
                     <a href="admin-users.html" class="menu-link">
-                        <i class="fas fa-users"></i>
+                        <i class="fa-solid fa-users"></i>
                         <span>Users</span>
                     </a>
                 </li>
                 <li class="menu-item">
                     <a href="admin-settings.html" class="menu-link">
-                        <i class="fas fa-cog"></i>
+                        <i class="fa-solid fa-gear"></i>
                         <span>Settings</span>
                     </a>
                 </li>
@@ -63,7 +64,7 @@
         </nav>
         <div class="sidebar-footer">
             <a href="#" class="menu-link" onclick="FeedbackSystem.logout()">
-                <i class="fas fa-sign-out-alt"></i>
+                <i class="fa-solid fa-right-from-bracket"></i>
                 <span>Logout</span>
             </a>
         </div>
@@ -94,6 +95,14 @@
 
         <!-- Content -->
         <div class="admin-content">
+            <!-- Welcome Section -->
+            <div class="welcome-section">
+                <div class="welcome-text">
+                    <h2>Reports & Analytics</h2>
+                    <p>View comprehensive feedback reports and analytics.</p>
+                </div>
+            </div>
+
             <!-- Report Controls -->
             <div class="report-controls">
                 <div class="control-group">
@@ -110,12 +119,7 @@
                     <label>Service:</label>
                     <select id="serviceFilter" class="filter-select">
                         <option value="">All Services</option>
-                        <option value="library">Library</option>
-                        <option value="registrar">Registrar</option>
-                        <option value="cashier">Cashier</option>
-                        <option value="it">IT Services</option>
-                        <option value="guidance">Guidance Office</option>
-                        <option value="health">Health Services</option>
+                        <!-- Options will be populated by JavaScript -->
                     </select>
                 </div>
                 <div class="control-actions">
@@ -127,6 +131,9 @@
                     </button>
                     <button class="btn btn-outline-primary" onclick="printReport()">
                         <i class="fas fa-print"></i> Print
+                    </button>
+                    <button class="btn btn-outline-primary" id="sendEmailBtn" onclick="sendReportByEmail()" disabled>
+                        <i class="fas fa-paper-plane"></i> Send to Service Email
                     </button>
                 </div>
             </div>
@@ -288,8 +295,19 @@
                 document.getElementById('userName').textContent = user.username;
             }
             
+            populateServiceFilter();
             generateReport();
             
+            // Add event listener for service filter to enable/disable email button
+            document.getElementById('serviceFilter').addEventListener('change', function() {
+                const sendEmailBtn = document.getElementById('sendEmailBtn');
+                if (this.value) {
+                    sendEmailBtn.disabled = false;
+                } else {
+                    sendEmailBtn.disabled = true;
+                }
+            });
+
             // Sidebar toggle
             document.getElementById('sidebarToggle').addEventListener('click', function() {
                 document.getElementById('sidebar').classList.toggle('collapsed');
@@ -299,6 +317,25 @@
                 document.getElementById('sidebar').classList.toggle('mobile-open');
             });
         });
+
+        function populateServiceFilter() {
+            const services = JSON.parse(localStorage.getItem('services') || '[]');
+            const select = document.getElementById('serviceFilter');
+
+            // Clear existing options except for "All Services"
+            while (select.options.length > 1) {
+                select.remove(1);
+            }
+
+            services.forEach(service => {
+                if (service.active) {
+                    const option = document.createElement('option');
+                    option.value = service.key;
+                    option.textContent = service.name;
+                    select.appendChild(option);
+                }
+            });
+        }
 
         function generateReport() {
             const feedbacks = FeedbackSystem.getFeedbacks();
@@ -323,6 +360,39 @@
             updateCharts(filtered);
             updatePerformanceTable(feedbacks);
             updateActivityTimeline(filtered.slice(0, 10));
+        }
+
+        function sendReportByEmail() {
+            const serviceFilter = document.getElementById('serviceFilter').value;
+            if (!serviceFilter) {
+                FeedbackSystem.showNotification('Please select a specific service to send a report.', 'warning');
+                return;
+            }
+
+            // Get all services from localStorage
+            const services = JSON.parse(localStorage.getItem('services') || '[]');
+            const service = services.find(s => s.key === serviceFilter);
+
+            if (!service || !service.email) {
+                FeedbackSystem.showNotification(`No email address found for ${service ? service.name : 'the selected service'}.`, 'error');
+                return;
+            }
+
+            const sendEmailBtn = document.getElementById('sendEmailBtn');
+            const originalText = sendEmailBtn.innerHTML;
+            sendEmailBtn.disabled = true;
+            sendEmailBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+
+            // Simulate sending email
+            setTimeout(() => {
+                FeedbackSystem.showNotification(`Report sent to ${service.email}`, 'success');
+                sendEmailBtn.disabled = false;
+                sendEmailBtn.innerHTML = originalText;
+                // Re-disable if "All Services" is selected back
+                if (!document.getElementById('serviceFilter').value) {
+                    sendEmailBtn.disabled = true;
+                }
+            }, 1500);
         }
 
         function updateSummary(feedbacks) {
@@ -486,24 +556,19 @@
             return counts;
         }
 
-        function formatServiceName(service) {
-            const names = {
-                'library': 'Library',
-                'registrar': 'Registrar',
-                'cashier': 'Cashier',
-                'it': 'IT Services',
-                'guidance': 'Guidance Office',
-                'health': 'Health Services'
-            };
-            return names[service] || service;
+        function formatServiceName(serviceKey) {
+            const services = JSON.parse(localStorage.getItem('services') || '[]');
+            const service = services.find(s => s.key === serviceKey);
+            return service ? service.name : (serviceKey.charAt(0).toUpperCase() + serviceKey.slice(1));
         }
 
         function updatePerformanceTable(feedbacks) {
-            const services = ['library', 'registrar', 'cashier', 'it', 'student-affairs', 'health'];
+            const allServices = JSON.parse(localStorage.getItem('services') || '[]');
+            const services = allServices.map(s => s.key);
             const tableBody = document.getElementById('performanceTable');
             
-            tableBody.innerHTML = services.map(service => {
-                const serviceFeedbacks = feedbacks.filter(f => f.service === service);
+            tableBody.innerHTML = services.map(serviceKey => {
+                const serviceFeedbacks = feedbacks.filter(f => f.service === serviceKey);
                 const total = serviceFeedbacks.length;
                 const avgRating = total > 0 ? 
                     (serviceFeedbacks.reduce((acc, f) => acc + (parseInt(f.rating) || 0), 0) / total).toFixed(1) : '-';
@@ -515,7 +580,7 @@
                 
                 return `
                     <tr>
-                        <td><strong>${formatServiceName(service)}</strong></td>
+                        <td><strong>${formatServiceName(serviceKey)}</strong></td>
                         <td>${total}</td>
                         <td>${avgRating}</td>
                         <td><span class="badge badge-success">${compliments}</span></td>
@@ -573,468 +638,5 @@
         function printReport() {
             window.print();
         }
-    </script>
-
-    <style>
-        /* Admin Layout Styles */
-        .admin-sidebar {
-            position: fixed;
-            left: 0;
-            top: 0;
-            width: 260px;
-            height: 100vh;
-            background: linear-gradient(180deg, #003366 0%, #001a33 100%);
-            z-index: 1000;
-            transition: transform 0.3s ease;
-            display: flex;
-            flex-direction: column;
-            color: white;
-        }
-        
-        .sidebar-header {
-            padding: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        
-        .sidebar-logo {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            color: white;
-            font-weight: 600;
-            font-size: 1.1rem;
-        }
-        
-        .sidebar-logo img {
-            width: 40px;
-            height: 40px;
-            object-fit: contain;
-        }
-        
-        .sidebar-toggle {
-            display: none;
-            background: none;
-            border: none;
-            color: white;
-            font-size: 1.25rem;
-            cursor: pointer;
-        }
-        
-        .sidebar-nav {
-            flex: 1;
-            padding: 20px 0;
-            overflow-y: auto;
-        }
-        
-        .sidebar-menu {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-        
-        .menu-item {
-            margin-bottom: 5px;
-        }
-        
-        .menu-link {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px 20px;
-            color: rgba(255, 255, 255, 0.7);
-            text-decoration: none;
-            transition: all 0.3s ease;
-            border-left: 3px solid transparent;
-        }
-        
-        .menu-link:hover,
-        .menu-item.active .menu-link {
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-            border-left-color: #d4a528;
-        }
-        
-        .menu-link i {
-            width: 20px;
-            text-align: center;
-        }
-        
-        .sidebar-footer {
-            padding: 20px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            margin-top: auto;
-        }
-        
-        .admin-main {
-            margin-left: 260px;
-            min-height: 100vh;
-            background: #f5f7fa;
-        }
-        
-        .admin-header {
-            background: white;
-            padding: 15px 30px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-        
-        .header-left {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-        
-        .mobile-toggle {
-            display: none;
-            background: none;
-            border: none;
-            font-size: 1.25rem;
-            color: var(--gray-700);
-            cursor: pointer;
-        }
-        
-        .page-title {
-            font-size: 1.5rem;
-            font-weight: 600;
-            color: var(--gray-900);
-        }
-        
-        .header-right {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-        
-        .header-user {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .user-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #003366 0%, #004080 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-        }
-        
-        .user-info {
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .user-name {
-            font-weight: 600;
-            color: var(--gray-900);
-            font-size: 0.9rem;
-        }
-        
-        .user-role {
-            font-size: 0.75rem;
-            color: var(--gray-500);
-        }
-        
-        .admin-content {
-            padding: 30px;
-        }
-        
-        /* Responsive Sidebar */
-        @media (max-width: 992px) {
-            .admin-sidebar {
-                transform: translateX(-100%);
-            }
-            
-            .admin-sidebar.active {
-                transform: translateX(0);
-            }
-            
-            .admin-main {
-                margin-left: 0;
-            }
-            
-            .sidebar-toggle,
-            .mobile-toggle {
-                display: flex;
-            }
-        }
-        
-        .report-controls {
-            background: var(--white);
-            border-radius: var(--radius-lg);
-            padding: 20px;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 30px;
-            flex-wrap: wrap;
-            box-shadow: var(--shadow-sm);
-        }
-        
-        .control-group {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .control-group label {
-            font-weight: 500;
-            color: var(--gray-700);
-            font-size: 0.9rem;
-        }
-        
-        .filter-select {
-            padding: 10px 15px;
-            border: 1px solid var(--gray-300);
-            border-radius: var(--radius-md);
-            font-size: 0.9rem;
-            cursor: pointer;
-        }
-        
-        .control-actions {
-            margin-left: auto;
-            display: flex;
-            gap: 10px;
-        }
-        
-        /* Summary Cards */
-        .summary-row {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 20px;
-            margin-bottom: 25px;
-        }
-        
-        .summary-card {
-            background: var(--white);
-            border-radius: var(--radius-lg);
-            padding: 20px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            box-shadow: var(--shadow-sm);
-        }
-        
-        .summary-icon {
-            width: 50px;
-            height: 50px;
-            border-radius: var(--radius-md);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--white);
-            font-size: 1.25rem;
-        }
-        
-        .summary-icon.blue { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
-        .summary-icon.green { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
-        .summary-icon.orange { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); }
-        .summary-icon.purple { background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%); }
-        .summary-icon.teal { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
-        
-        .summary-info {
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .summary-value {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--gray-900);
-        }
-        
-        .summary-label {
-            font-size: 0.8rem;
-            color: var(--gray-600);
-        }
-        
-        /* Charts Grid */
-        .charts-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
-            margin-bottom: 25px;
-        }
-        
-        .chart-card {
-            background: var(--white);
-            border-radius: var(--radius-lg);
-            box-shadow: var(--shadow-sm);
-            overflow: hidden;
-        }
-        
-        .chart-card.full-width {
-            grid-column: span 2;
-        }
-        
-        .chart-card .card-header {
-            padding: 20px;
-            border-bottom: 1px solid var(--gray-200);
-        }
-        
-        .chart-card .card-header h3 {
-            font-size: 1rem;
-            font-weight: 600;
-            color: var(--gray-900);
-        }
-        
-        .chart-card .card-body {
-            padding: 20px;
-            height: 300px;
-        }
-        
-        .chart-card.full-width .card-body {
-            height: 350px;
-        }
-        
-        /* Table Card */
-        .table-card {
-            background: var(--white);
-            border-radius: var(--radius-lg);
-            box-shadow: var(--shadow-sm);
-            overflow: hidden;
-            margin-bottom: 25px;
-        }
-        
-        .table-card .card-header {
-            padding: 20px;
-            border-bottom: 1px solid var(--gray-200);
-        }
-        
-        .table-card .card-header h3 {
-            font-size: 1rem;
-            font-weight: 600;
-        }
-        
-        .table-card .card-body {
-            padding: 0;
-        }
-        
-        .performance-badge {
-            padding: 5px 12px;
-            border-radius: var(--radius-full);
-            font-size: 0.8rem;
-            font-weight: 500;
-        }
-        
-        .performance-badge.excellent { background: rgba(40, 167, 69, 0.1); color: #28a745; }
-        .performance-badge.good { background: rgba(23, 162, 184, 0.1); color: #17a2b8; }
-        .performance-badge.average { background: rgba(255, 193, 7, 0.1); color: #856404; }
-        .performance-badge.below-average { background: rgba(253, 126, 20, 0.1); color: #fd7e14; }
-        .performance-badge.needs-improvement { background: rgba(220, 53, 69, 0.1); color: #dc3545; }
-        
-        /* Activity Timeline */
-        .activity-timeline {
-            padding: 20px;
-        }
-        
-        .activity-item {
-            display: flex;
-            gap: 15px;
-            padding: 15px 0;
-            border-bottom: 1px solid var(--gray-100);
-        }
-        
-        .activity-item:last-child {
-            border-bottom: none;
-        }
-        
-        .activity-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: var(--radius-full);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--white);
-            font-size: 1rem;
-        }
-        
-        .activity-icon.compliment { background: #28a745; }
-        .activity-icon.suggestion { background: #17a2b8; }
-        .activity-icon.complaint { background: #dc3545; }
-        .activity-icon.inquiry { background: #d4a528; color: #333; }
-        .activity-icon.default { background: var(--gray-500); }
-        
-        .activity-content p {
-            color: var(--gray-700);
-            font-size: 0.9rem;
-            margin-bottom: 5px;
-        }
-        
-        .activity-content .type-label {
-            color: var(--primary-color);
-        }
-        
-        .activity-time {
-            font-size: 0.8rem;
-            color: var(--gray-500);
-        }
-        
-        .no-activity {
-            text-align: center;
-            color: var(--gray-500);
-            padding: 40px;
-        }
-        
-        @media (max-width: 1200px) {
-            .summary-row {
-                grid-template-columns: repeat(3, 1fr);
-            }
-        }
-        
-        @media (max-width: 992px) {
-            .charts-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .chart-card.full-width {
-                grid-column: span 1;
-            }
-            
-            .summary-row {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            
-            .report-controls {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            
-            .control-actions {
-                margin-left: 0;
-                justify-content: center;
-            }
-        }
-        
-        @media (max-width: 768px) {
-            .summary-row {
-                grid-template-columns: 1fr;
-            }
-        }
-        
-        @media print {
-            .admin-sidebar,
-            .admin-header,
-            .report-controls .control-actions {
-                display: none !important;
-            }
-            
-            .admin-main {
-                margin-left: 0 !important;
-            }
-        }
-    </style>
-</body>
+    </script></body>
 </html>

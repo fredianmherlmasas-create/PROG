@@ -451,6 +451,12 @@ function handleFormSubmit(form) {
         if (formType === 'feedback') {
             saveFeedback(data);
             showNotification('Thank you! Your feedback has been submitted successfully.', 'success');
+            
+            // Show thank you modal
+            if (typeof showThankYouModal === 'function') {
+                showThankYouModal();
+            }
+            
             form.reset();
             
             // Reset star ratings
@@ -549,8 +555,7 @@ function handleLogin(data) {
     
     // Default admin credentials (in real app, this would be server-side)
     const validCredentials = [
-        { username: 'admin', password: 'admin123', role: 'admin' },
-        { username: 'staff', password: 'staff123', role: 'staff' }
+        { username: 'admin', password: 'admin123', role: 'admin' }
     ];
     
     const user = validCredentials.find(
@@ -911,8 +916,23 @@ function initCitizensCharterSurvey() {
 // Handle Satisfaction Rating Table
 function initSatisfactionRatingTable() {
     const satisfactionRadios = document.querySelectorAll('.satisfaction-table input[type="radio"]');
+    const ratingCells = document.querySelectorAll('.satisfaction-table .rating-cell');
     
     if (!satisfactionRadios.length) return;
+    
+    // Make entire cell clickable
+    ratingCells.forEach(cell => {
+        cell.style.cursor = 'pointer';
+        cell.addEventListener('click', function(e) {
+            if (e.target.tagName !== 'INPUT') {
+                const radio = this.querySelector('input[type="radio"]');
+                if (radio) {
+                    radio.click();
+                    radio.focus();
+                }
+            }
+        });
+    });
     
     // Add visual feedback when radio is selected
     satisfactionRadios.forEach(radio => {
@@ -925,6 +945,23 @@ function initSatisfactionRatingTable() {
                 });
                 // Add active state to the selected cell
                 this.closest('.rating-cell').classList.add('active');
+            }
+        });
+        
+        // Keyboard navigation support
+        radio.addEventListener('keydown', function(e) {
+            const row = this.closest('.satisfaction-row');
+            if (!row) return;
+            
+            const cells = Array.from(row.querySelectorAll('.rating-cell input[type="radio"]'));
+            const currentIndex = cells.indexOf(this);
+            
+            if (e.key === 'ArrowRight' && currentIndex < cells.length - 1) {
+                e.preventDefault();
+                cells[currentIndex + 1].focus();
+            } else if (e.key === 'ArrowLeft' && currentIndex > 0) {
+                e.preventDefault();
+                cells[currentIndex - 1].focus();
             }
         });
     });
